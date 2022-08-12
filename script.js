@@ -1,3 +1,5 @@
+// const { fetchProducts } = require('./helpers/fetchProducts');
+
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -24,11 +26,32 @@ const createProductItemElement = ({ sku, name, image }) => {
   return section;
 };
 
+const refatorarProdutos = async () => {
+  const produtosResolve = await fetchProducts('computador');
+  const products = produtosResolve.results;
+  const listaProdutos = products.map((produtoAtual) => {
+    const refatoraçãoProduto = {
+    sku: produtoAtual.id,
+    name: produtoAtual.title,
+    image: produtoAtual.thumbnail,
+    };
+    return refatoraçãoProduto;
+  });
+  return listaProdutos;
+};
+
+const retornarItens = async () => {
+  const sessaoItens = document.querySelector('.items');
+  const listaDeRetorno = await refatorarProdutos();
+  listaDeRetorno.forEach((item) => {
+    sessaoItens.appendChild(createProductItemElement(item));
+  });
+};
+
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
 const cartItemClickListener = (event) => {
-  const oi = 'oi';
-  console.log(oi);
+ //
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -39,4 +62,28 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-window.onload = () => { };
+const refatorarCarrinho = async (produtoCarrinho) => {
+  const localCarrinho = document.querySelector('.cart__items');
+  const escolhido = produtoCarrinho.querySelector('.item__sku').innerText;
+  const dados = await fetchItem(escolhido);
+  const novoProduto = {
+    sku: dados.id,
+    name: dados.title,
+    salePrice: dados.price,
+  };
+  localCarrinho.appendChild(createCartItemElement(novoProduto));
+};
+
+const adicionarAoCarrinho = async () => {
+  const botaoItemEscolhido = document.querySelectorAll('.item');
+  const pickedbutton = botaoItemEscolhido.forEach((umItem) => {
+    umItem.addEventListener('click', (evento) => {
+      const picked = evento.currentTarget;
+      refatorarCarrinho(picked);
+    });
+  });
+  console.log(pickedbutton);
+};
+
+window.onload = async () => { await retornarItens(); adicionarAoCarrinho(); };
+// window.onload = retornarItens();

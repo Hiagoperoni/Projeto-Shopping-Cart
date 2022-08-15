@@ -50,8 +50,23 @@ const retornarItens = async () => {
 
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
+const localDoCarrinho = document.querySelector('.cart');
+const filhosLocalDoCarrinho = localDoCarrinho.children[0];
+const itensDoCarrinho = filhosLocalDoCarrinho.children;
+
 const cartItemClickListener = (event) => {
- //
+  const itemEscolhido = event.currentTarget;
+  itemEscolhido.remove();
+};
+
+const excluirDoCarrinho = () => {
+  const pickedQuit = itensDoCarrinho.forEach((itemExcluir) => {
+    itemExcluir.addEventListener('click', cartItemClickListener);
+  });
+};
+
+const somarCarrinho = async () => {
+
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -82,8 +97,9 @@ const adicionarAoCarrinho = async () => {
       refatorarCarrinho(picked);
     });
   });
-  console.log(pickedbutton);
 };
 
-window.onload = async () => { await retornarItens(); adicionarAoCarrinho(); };
-// window.onload = retornarItens();
+window.onload = async () => { 
+  await retornarItens(); 
+  adicionarAoCarrinho();
+};

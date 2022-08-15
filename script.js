@@ -60,6 +60,8 @@ const localDoCarrinho = document.querySelector('.cart');
 const filhosLocalDoCarrinho = localDoCarrinho.children[0];
 const itensDoCarrinho = filhosLocalDoCarrinho.children;
 
+const botaoEsvaziar = document.querySelector('.empty-cart');
+
 const somarItensDoCarrinho = () => {
   const valorItens = document.getElementsByClassName('valorItem');
   const sessaoSomatorio = document.querySelector('.total-price');
@@ -73,8 +75,14 @@ const somarItensDoCarrinho = () => {
   });
   const valorTotalDoSomatorio = somartodos.reduce((acc, curr) => curr + acc, 0);
   const resultado = Math.round(valorTotalDoSomatorio * 100) / 100;
-  sessaoSomatorio.innerText = `Valor Total: R$ ${resultado}`;
+  sessaoSomatorio.innerText = resultado;
 };
+
+botaoEsvaziar.addEventListener('click', async () => {
+  const ol = document.querySelector('ol');
+  ol.innerHTML = '';
+  somarItensDoCarrinho();
+});
 
 const cartItemClickListener = async (event) => {
   const itemEscolhido = event.currentTarget;

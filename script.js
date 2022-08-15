@@ -50,28 +50,48 @@ const retornarItens = async () => {
 
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
+const somatorio = document.querySelector('.cart');
+const sectionSomatorio = document.createElement('section');
+sectionSomatorio.className = 'total-price';
+sectionSomatorio.innerText = 'Valor Total: 0';
+somatorio.appendChild(sectionSomatorio);
+
 const localDoCarrinho = document.querySelector('.cart');
 const filhosLocalDoCarrinho = localDoCarrinho.children[0];
 const itensDoCarrinho = filhosLocalDoCarrinho.children;
 
-const cartItemClickListener = (event) => {
+const somarItensDoCarrinho = () => {
+  const valorItens = document.getElementsByClassName('valorItem');
+  const sessaoSomatorio = document.querySelector('.total-price');
+  const somartodos = [];
+  const ble = [...valorItens];
+  ble.forEach((umItemzinho) => {
+    const textoDoItem = umItemzinho.innerText;
+    const formatacao = textoDoItem.substring(textoDoItem.indexOf('$') + 1);
+    const valorDoItemzinho = parseFloat(formatacao);
+    somartodos.push(valorDoItemzinho);
+  });
+  const valorTotalDoSomatorio = somartodos.reduce((acc, curr) => curr + acc, 0);
+  const resultado = Math.round(valorTotalDoSomatorio * 100) / 100;
+  sessaoSomatorio.innerText = `Valor Total: R$ ${resultado}`;
+};
+
+const cartItemClickListener = async (event) => {
   const itemEscolhido = event.currentTarget;
-  itemEscolhido.remove();
+  await itemEscolhido.remove();
+  somarItensDoCarrinho();
 };
 
 const excluirDoCarrinho = () => {
-  const pickedQuit = itensDoCarrinho.forEach((itemExcluir) => {
+  itensDoCarrinho.forEach((itemExcluir) => {
     itemExcluir.addEventListener('click', cartItemClickListener);
   });
 };
 
-const somarCarrinho = async () => {
-
-};
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
-  li.className = 'cart__item';
+  li.className = 'cart__item valorItem';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -91,10 +111,11 @@ const refatorarCarrinho = async (produtoCarrinho) => {
 
 const adicionarAoCarrinho = async () => {
   const botaoItemEscolhido = document.querySelectorAll('.item');
-  const pickedbutton = botaoItemEscolhido.forEach((umItem) => {
-    umItem.addEventListener('click', (evento) => {
+  botaoItemEscolhido.forEach((umItem) => {
+    umItem.addEventListener('click', async (evento) => {
       const picked = evento.currentTarget;
-      refatorarCarrinho(picked);
+      await refatorarCarrinho(picked);
+      somarItensDoCarrinho();
     });
   });
 };
@@ -102,4 +123,5 @@ const adicionarAoCarrinho = async () => {
 window.onload = async () => { 
   await retornarItens(); 
   adicionarAoCarrinho();
+  somarItensDoCarrinho();
 };

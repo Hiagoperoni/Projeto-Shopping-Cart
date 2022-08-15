@@ -88,7 +88,6 @@ const excluirDoCarrinho = () => {
   });
 };
 
-
 const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item valorItem';

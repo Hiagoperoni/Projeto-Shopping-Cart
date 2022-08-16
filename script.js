@@ -1,12 +1,3 @@
-const salvarItens = () => {
-  const salvarValores = document.querySelector('ol');
-  let texto = '';
-  const blu = salvarValores.childNodes;
-  blu.forEach((cadaFilho) => {
-    localStorage.setItem('savedList', texto += cadaFilho.outerHTML);
-  });
-};
-
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -89,14 +80,14 @@ botaoEsvaziar.addEventListener('click', async () => {
   const ol = document.querySelector('ol');
   ol.innerHTML = '';
   somarItensDoCarrinho();
-  salvarItens();
+  saveCartItems(document.querySelector('ol'));
 });
 
 const cartItemClickListener = async (event) => {
   const itemEscolhido = event.currentTarget;
   await itemEscolhido.remove();
   somarItensDoCarrinho();
-  salvarItens();
+  saveCartItems(document.querySelector('ol'));
 };
 
 const excluirDoCarrinho = async () => {
@@ -133,17 +124,14 @@ const adicionarAoCarrinho = async () => {
       const picked = evento.currentTarget;
       await refatorarCarrinho(picked);
       somarItensDoCarrinho();
-      salvarItens();
+      saveCartItems(document.querySelector('ol'));
     });
   });
 };
 const localPaiParaDevolverOsSalvos = document.querySelector('ol');
-const itensSalvos = () => {
-  localPaiParaDevolverOsSalvos.innerHTML = localStorage.getItem('savedList');
-}; 
 
 const paraRetomar = () => {
-  itensSalvos();
+  localPaiParaDevolverOsSalvos.innerHTML = getSavedCartItems();
   somarItensDoCarrinho();
 };
 

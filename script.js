@@ -1,4 +1,11 @@
-// const { fetchProducts } = require('./helpers/fetchProducts');
+const salvarItens = () => {
+  const salvarValores = document.querySelector('ol');
+  let texto = '';
+  const blu = salvarValores.childNodes;
+  blu.forEach((cadaFilho) => {
+    localStorage.setItem('savedList', texto += cadaFilho.outerHTML);
+  });
+};
 
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
@@ -82,18 +89,21 @@ botaoEsvaziar.addEventListener('click', async () => {
   const ol = document.querySelector('ol');
   ol.innerHTML = '';
   somarItensDoCarrinho();
+  salvarItens();
 });
 
 const cartItemClickListener = async (event) => {
   const itemEscolhido = event.currentTarget;
   await itemEscolhido.remove();
   somarItensDoCarrinho();
+  salvarItens();
 };
 
-const excluirDoCarrinho = () => {
-  itensDoCarrinho.forEach((itemExcluir) => {
-    itemExcluir.addEventListener('click', cartItemClickListener);
-  });
+const excluirDoCarrinho = async () => {
+  // await itensDoCarrinho.forEach((itemExcluir) => 
+  for (let i = 0; i < itensDoCarrinho.length; i += 1) {
+    itensDoCarrinho[i].addEventListener('click', cartItemClickListener);
+  }
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -123,12 +133,24 @@ const adicionarAoCarrinho = async () => {
       const picked = evento.currentTarget;
       await refatorarCarrinho(picked);
       somarItensDoCarrinho();
+      salvarItens();
     });
   });
+};
+const localPaiParaDevolverOsSalvos = document.querySelector('ol');
+const itensSalvos = () => {
+  localPaiParaDevolverOsSalvos.innerHTML = localStorage.getItem('savedList');
+}; 
+
+const paraRetomar = () => {
+  itensSalvos();
+  somarItensDoCarrinho();
 };
 
 window.onload = async () => { 
   await retornarItens(); 
   adicionarAoCarrinho();
   somarItensDoCarrinho();
+  paraRetomar();
+  excluirDoCarrinho();
 };

@@ -2,9 +2,9 @@ const saveCartItems = (param) => {
   const salvarValores = param;
   let texto = '';
   const blu = salvarValores.childNodes;
-  blu.forEach((cadaFilho) => {
-    localStorage.setItem('cartItems', texto += cadaFilho.outerHTML);
-  });
+  for (let i = 0; i < blu.length; i += 1) {
+    localStorage.setItem('cartItems', texto += blu[i].outerHTML);
+}
 };
 
 if (typeof module !== 'undefined') {

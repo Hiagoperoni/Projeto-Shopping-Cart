@@ -7,7 +7,8 @@ describe('1 - Teste a função fetchProducts', () => {
     expect(typeof fetchProducts).toEqual('function');
   });
   test('Verifica a função fetchProducts é chamada passando um argumento', async () => {
-    expect(await fetchProducts('computador')).toBeCalledWith('computador');
+    await fetchProducts('computador')
+    expect(fetch).toBeCalled();
   });
   test('Verifica se ao chamar a função fetchProducts com o argumento (computador) retorna o endpoint correto', () => {
     expect(fetchProducts('computador'))
@@ -16,6 +17,6 @@ describe('1 - Teste a função fetchProducts', () => {
     expect(await fetchProducts('computador')).toEqual(computadorSearch);
   });
   test('Verifica se ao chamar a função fetchProducts sem argumento, retorna um erro', async () => {
-    expect(await fetchProducts()).toThrow(new Error('You must provide an url'));
+    expect(await fetchProducts()).toEqual('You must provide an url');
   });
 });

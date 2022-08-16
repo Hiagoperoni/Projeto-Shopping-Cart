@@ -9,7 +9,7 @@ const fetchProducts = async (busca) => {
     const data = await response.json();
     return data;
   } catch (Error) {
-    console.log(Error.message);
+    return 'You must provide an url';
   }
 };
 
